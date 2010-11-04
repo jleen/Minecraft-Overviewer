@@ -120,7 +120,7 @@ def main():
     w.go(options.procs)
 
     # Now generate the tiles
-    q = quadtree.QuadtreeGen(w, destdir, depth=options.zoom, imgformat=imgformat, optimizeimg=optimizeimg)
+    q = quadtree.QuadtreeGen(w, destdir, depth=options.zoom, imgformat=imgformat, optimizeimg=optimizeimg, night=options.night)
     q.write_html(options.skipjs)
     q.go(options.procs)
 

@@ -254,7 +254,7 @@ class WorldRenderer(object):
                         results[(col, row)] = imgpath
                         continue
 
-                result = chunk.render_and_save(chunkfile, self.cachedir, self, cave=self.caves)
+                result = chunk.render_and_save(chunkfile, self.cachedir, self, night=self.night, cave=self.caves)
                 results[(col, row)] = result
                 if i > 0:
                     if 1000 % i == 0 or i % 1000 == 0:
@@ -274,7 +274,7 @@ class WorldRenderer(object):
 
                 result = pool.apply_async(chunk.render_and_save,
                         args=(chunkfile,self.cachedir,self),
-                        kwds=dict(cave=self.caves))
+                        kwds=dict(night=self.night,cave=self.caves))
                 asyncresults.append((col, row, result))
 
             pool.close()

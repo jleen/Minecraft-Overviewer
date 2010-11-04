@@ -100,14 +100,14 @@ def iterate_chunkblocks(xoff,yoff):
 transparent_blocks = set([0, 6, 8, 9, 18, 20, 37, 38, 39, 40, 44, 50, 51, 52, 53,
     59, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 81, 83, 85])
 
-def render_and_save(chunkfile, cachedir, worldobj, cave=False):
+def render_and_save(chunkfile, cachedir, worldobj, night=False, cave=False):
     """Used as the entry point for the multiprocessing workers (since processes
     can't target bound methods) or to easily render and save one chunk
     
     Returns the image file location"""
     a = ChunkRenderer(chunkfile, cachedir, worldobj)
     try:
-        return a.render_and_save(cave)
+        return a.render_and_save(night, cave)
     except ChunkCorrupt:
         # This should be non-fatal, but should print a warning
         pass
@@ -274,12 +274,13 @@ class ChunkRenderer(object):
         self._digest = digest[:6]
         return self._digest
 
-    def find_oldimage(self, cave):
+    def find_oldimage(self, night, cave):
         # Get the name of the existing image. No way to do this but to look at
         # all the files
         oldimg = oldimg_path = None
         for filename in os.listdir(self.cachedir):
-            if filename.startswith("img.{0}.{1}.".format(self.blockid,
+            if filename.startswith("img.{0}.{1}.{2}.".format(self.blockid,
+                    "night" if night else "day",
                     "cave" if cave else "nocave")) and \
                     filename.endswith(".png"):
                 oldimg = filename
@@ -287,14 +288,14 @@ class ChunkRenderer(object):
                 break
         return oldimg, oldimg_path
 
-    def render_and_save(self, cave=False):
+    def render_and_save(self, night=False, cave=False):
         """Render the chunk using chunk_render, and then save it to a file in
         the same directory as the source image. If the file already exists and
         is up to date, this method doesn't render anything.
         """
         blockid = self.blockid
 
-        oldimg, oldimg_path = self.find_oldimage(cave)
+        oldimg, oldimg_path = self.find_oldimage(night, cave)
 
         if oldimg:
             # An image exists? Instead of checking the hash which is kinda
@@ -313,8 +314,9 @@ class ChunkRenderer(object):
         #    the image was invalid and deleted (sort of the same as (1))
 
         # What /should/ the image be named, go ahead and hash the block array
-        dest_filename = "img.{0}.{1}.{2}.png".format(
+        dest_filename = "img.{0}.{1}.{2}.{3}.png".format(
                 blockid,
+                "night" if night else "day",
                 "cave" if cave else "nocave",
                 self._hash_blockarray(),
                 )
