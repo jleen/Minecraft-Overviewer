@@ -271,10 +271,10 @@
     
     // Create the DIV to hold the cave/surface controls
     var caveControlDiv = document.createElement('DIV');
-    var caveControl = new SurfaceCaveControl(caveControlDiv, 'cave_tiles', 'Cave', map);
+    var caveControl = new SurfaceCaveControl(caveControlDiv, 'day', 'Daytime', map);
     
     var surfaceControlDiv = document.createElement('DIV');
-    var surfaceControl = new SurfaceCaveControl(surfaceControlDiv, 'tiles', 'Surface', map);
+    var surfaceControl = new SurfaceCaveControl(surfaceControlDiv, 'night', 'Night', map);
 
     caveControlDiv.index = 1;
     surfaceControlDiv.index = 2;
