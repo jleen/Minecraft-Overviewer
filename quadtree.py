@@ -29,6 +29,7 @@ import util
 from PIL import Image
 
 from optimizeimages import optimize_image
+import composite
 
 
 """
@@ -450,7 +451,10 @@ def render_innertile(dest, name, imgformat, optimizeimg):
 
     # Create the actual image now
     img = Image.new("RGBA", (384, 384), (38,92,255,0))
-
+    
+    # we'll use paste (NOT alpha_over) for quadtree generation because
+    # this is just straight image stitching, not alpha blending
+    
     if q0path:
         try:
             quad0 = Image.open(q0path).resize((192,192), Image.ANTIALIAS)
@@ -614,7 +618,7 @@ def render_worldtile(chunks, colstart, colend, rowstart, rowend, path, imgformat
         xpos = -192 + (col-colstart)*192
         ypos = -96 + (row-rowstart)*96
 
-        tileimg.paste(chunkimg.convert("RGB"), (xpos, ypos), chunkimg)
+        composite.alpha_over(tileimg, chunkimg.convert("RGB"), (xpos, ypos), chunkimg)
 
     # Save them
     tileimg.save(imgpath)
