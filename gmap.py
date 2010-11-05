@@ -81,13 +81,13 @@ def main():
 
     if len(args) != 2:
         if options.delete:
-            return delete_all(cachedir, None)
+            return delete_all(cachedir, None, options.night)
         parser.error("Where do you want to save the tiles?")
 
     destdir = args[1]
 
     if options.delete:
-        return delete_all(cachedir, destdir)
+        return delete_all(cachedir, destdir, options.night)
 
     if options.chunklist:
         chunklist = open(options.chunklist, 'r')
@@ -124,9 +124,9 @@ def main():
     q.write_html(options.skipjs)
     q.go(options.procs)
 
-def delete_all(worlddir, tiledir):
+def delete_all(worlddir, tiledir, night):
     # First delete all images in the world dir
-    imgre = r"img\.[^.]+\.[^.]+\.nocave\.\w+\.png$"
+    imgre = r"img\.[^.]+\.[^.]+\." + "night" if night else "day" + r".nocave\.\w+\.png$"
     matcher = re.compile(imgre)
 
     for dirpath, dirnames, filenames in os.walk(worlddir):
