@@ -302,15 +302,6 @@ class ChunkRenderer(object):
 
         oldimg, oldimg_path = self.find_oldimage(night, cave)
 
-        if oldimg:
-            # An image exists? Instead of checking the hash which is kinda
-            # expensive (for tens of thousands of chunks, yes it is) check if
-            # the mtime of the chunk file is newer than the mtime of oldimg
-            if os.path.getmtime(self.chunkfile) <= os.path.getmtime(oldimg_path):
-                # chunkfile is older than the image, don't even bother checking
-                # the hash
-                return oldimg_path
-
         # Reasons for the code to get to this point:
         # 1) An old image doesn't exist
         # 2) An old image exists, but the chunk was more recently modified (the
