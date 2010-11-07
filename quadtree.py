@@ -570,7 +570,7 @@ def render_worldtile(chunks, colstart, colend, rowstart, rowend, path, imgformat
     for col, row, chunkfile in chunks:
         # Get the hash of this image and add it to our hash for this tile
         imghash.update(
-                os.path.basename(chunkfile).split(".")[4]
+                os.path.basename(chunkfile).split(".")[5]
                 )
     digest = imghash.digest()
 
